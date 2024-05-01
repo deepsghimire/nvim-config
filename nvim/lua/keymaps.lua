@@ -1,3 +1,4 @@
+-- shamelessly took sane mappings from lazyvim
 local M = {}
 
 M.mappings = {}
