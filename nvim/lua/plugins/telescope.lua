@@ -71,5 +71,13 @@ return {
 			mode = "n",
 			desc = "keymaps",
 		},
+		{
+			"<leader>ss",
+			function()
+				require("telescope.builtin").treesitter()
+			end,
+			mode = "n",
+			desc = "treesitter symbols",
+		},
 	},
 }
