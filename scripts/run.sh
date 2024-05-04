@@ -2,7 +2,7 @@
 
 set -xeuo pipefail
 
-DIR=~/project/self/config/
+DIR="${0%/*}/.."
 export XDG_CONFIG_HOME=$DIR
 export XDG_STATE_HOME=$DIR/state
 export XDG_DATA_HOME=$DIR/data
