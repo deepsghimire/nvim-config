@@ -17,7 +17,7 @@ end
 
 function M:setup()
 	M:bootstrap()
-	require("lazy").setup("plugins")
+	require("lazy").setup("plugins", { config = { defaults = { lazy = true } } })
 end
 
 return M
