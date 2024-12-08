@@ -1,6 +1,6 @@
 return {
     "ggandor/leap.nvim",
     config = function()
-        require("leap").create_default_mappings()
+        vim.keymap.set({ 'n', 'x', 'o' }, 'S', '<Plug>(leap)')
     end
 }
