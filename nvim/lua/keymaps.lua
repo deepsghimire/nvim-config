@@ -2,9 +2,14 @@
 local M = {}
 
 M.mappings = {}
+M.lsp_mappings = {}
 
 function M:map(mode, lhs, rhs, args)
-	self.mappings[#self.mappings + 1] = { mode = mode, lhs = lhs, rhs = rhs, args = args }
+    self.mappings[#self.mappings + 1] = { mode = mode, lhs = lhs, rhs = rhs, args = args }
+end
+
+function M:lmap(mode, lhs, rhs, args)
+    self.lsp_mappings[#self.lsp_mappings + 1] = { mode = mode, lhs = lhs, rhs = rhs, args = args }
 end
 
 -- better up/down
@@ -47,10 +52,10 @@ M:map({ "i", "n" }, "<esc>", "<cmd>noh<cr><esc>", { desc = "Escape and Clear hls
 -- Clear search, diff update and redraw
 -- taken from runtime/lua/_editor.lua
 M:map(
-	"n",
-	"<leader>ur",
-	"<Cmd>nohlsearch<Bar>diffupdate<Bar>normal! <C-L><CR>",
-	{ desc = "Redraw / Clear hlsearch / Diff Update" }
+    "n",
+    "<leader>ur",
+    "<Cmd>nohlsearch<Bar>diffupdate<Bar>normal! <C-L><CR>",
+    { desc = "Redraw / Clear hlsearch / Diff Update" }
 )
 
 -- https://github.com/mhinz/vim-galore#saner-behavior-of-n-and-n
@@ -90,16 +95,16 @@ M:map("n", "]q", vim.cmd.cnext, { desc = "Next Quickfix" })
 
 -- formatting
 M:map({ "n", "v" }, "<leader>cf", function()
-	LazyVim.format({ force = true })
+    LazyVim.format({ force = true })
 end, { desc = "Format" })
 
 -- diagnostic
 local diagnostic_goto = function(next, severity)
-	local go = next and vim.diagnostic.goto_next or vim.diagnostic.goto_prev
-	severity = severity and vim.diagnostic.severity[severity] or nil
-	return function()
-		go({ severity = severity })
-	end
+    local go = next and vim.diagnostic.goto_next or vim.diagnostic.goto_prev
+    severity = severity and vim.diagnostic.severity[severity] or nil
+    return function()
+        go({ severity = severity })
+    end
 end
 M:map("n", "<leader>cd", vim.diagnostic.open_float, { desc = "Line Diagnostics" })
 M:map("n", "]d", diagnostic_goto(true), { desc = "Next Diagnostic" })
@@ -176,11 +181,42 @@ M:map("n", "<leader><tab>]", "<cmd>tabnext<cr>", { desc = "Next Tab" })
 M:map("n", "<leader><tab>d", "<cmd>tabclose<cr>", { desc = "Close Tab" })
 M:map("n", "<leader><tab>[", "<cmd>tabprevious<cr>", { desc = "Previous Tab" })
 
+M:lmap("n", "gd", vim.lsp.buf.definition, { desc = "Goto Definition" })
+M:lmap("n", "gr", vim.lsp.buf.references, { desc = "References" })
+M:lmap("n", "gI", vim.lsp.buf.implementation, { desc = "Goto Implementation" })
+M:lmap("n", "gy", vim.lsp.buf.type_definition, { desc = "Goto T[y]pe Definition" })
+M:lmap("n", "gD", vim.lsp.buf.declaration, { desc = "Goto Declaration" })
+M:lmap("n", "K", vim.lsp.buf.hover, { desc = "Hover" })
+M:lmap("n", "gK", vim.lsp.buf.signature_help, { desc = "Signature Help" })
+M:lmap("i", "<c-k>", vim.lsp.buf.signature_help, { desc = "Signature Help" })
+M:lmap({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, { desc = "Code Action" })
+M:lmap({ "n", "v" }, "<leader>cc", vim.lsp.codelens.run, { desc = "Run Codelens" })
+M:lmap("n", "<leader>cC", vim.lsp.codelens.refresh, { desc = "Refresh & Display Codelens" })
+M:lmap("n", "<leader>cr", vim.lsp.buf.rename, { desc = "Rename" })
+
+local function on_attach_lsp_keymaps(_, bufnr)
+    for _, map in ipairs(M.lsp_mappings) do
+        local opts = vim.tbl_extend("force", map.args or {}, { buffer = bufnr })
+        vim.keymap.set(map.mode or "n", map.lhs, map.rhs, opts)
+    end
+end
+
 
 function M:setup()
-	for i, mapping in pairs(self.mappings) do
-		vim.keymap.set(mapping.mode, mapping.lhs, mapping.rhs, mapping.args)
-	end
+    for _, mapping in pairs(self.mappings) do
+        vim.keymap.set(mapping.mode, mapping.lhs, mapping.rhs, mapping.args)
+    end
+    vim.api.nvim_create_autocmd('LspAttach', {
+        group = vim.api.nvim_create_augroup('my.lsp', { clear = true }),
+        callback = function(args)
+            local client = vim.lsp.get_client_by_id(args.data.client_id)
+            if client then
+                on_attach_lsp_keymaps(client, args.buf)
+            end
+        end
+
+
+    })
 end
 
 return M
