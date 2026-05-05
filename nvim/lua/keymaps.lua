@@ -176,11 +176,56 @@ M:map("n", "<leader><tab>]", "<cmd>tabnext<cr>", { desc = "Next Tab" })
 M:map("n", "<leader><tab>d", "<cmd>tabclose<cr>", { desc = "Close Tab" })
 M:map("n", "<leader><tab>[", "<cmd>tabprevious<cr>", { desc = "Previous Tab" })
 
+function define_lsp_keymaps()
+vim.api.nvim_create_autocmd('LspAttach', {
+  callback = function(event)
+
+    local client = vim.get_client_by_id(args.data.client_id)
+    if not client then return end
+
+    local opts = { buffer = event.buf }
+    local map = function(mode, keys, func, desc)
+      vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = 'LSP: ' .. desc })
+    end
+
+    -- Basic Navigation
+    map('n', 'gd', vim.lsp.buf.definition, '[G]oto [D]efinition')
+    map('n', 'gr', vim.lsp.buf.references, '[G]oto [R]eferences')
+    map('n', 'gI', vim.lsp.buf.implementation, '[G]oto [I]mplementation')
+    map('n', 'gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
+    map('n', '<leader>D', vim.lsp.buf.type_definition, 'Type [D]efinition')
+
+    -- Documentation & Symbols
+    map('n', 'K', vim.lsp.buf.hover, 'Hover Documentation')
+    map('n', '<C-k>', vim.lsp.buf.signature_help, 'Signature Help')
+    map('n', '<leader>ds', vim.lsp.buf.document_symbol, '[D]ocument [S]ymbols')
+    map('n', '<leader>ws', vim.lsp.buf.workspace_symbol, '[W]orkspace [S]ymbols')
+
+    -- Refactoring & Actions
+    map('n', '<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
+    map('n', '<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
+
+    -- Workspace Management
+    map('n', '<leader>wa', vim.lsp.buf.add_workspace_folder, '[W]orkspace [A]dd Folder')
+    map('n', '<leader>wr', vim.lsp.buf.remove_workspace_folder, '[W]orkspace [R]emove Folder')
+    map('n', '<leader>wl', function()
+      print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+    end, '[W]orkspace [L]ist Folders')
+
+    -- Diagnostics (Quick access)
+    map('n', '[d', vim.diagnostic.goto_prev, 'Go to previous diagnostic')
+    map('n', ']d', vim.diagnostic.goto_next, 'Go to next diagnostic')
+    map('n', '<leader>e', vim.diagnostic.open_float, 'Show diagnostic [E]rror messages')
+    map('n', '<leader>q', vim.diagnostic.setloclist, 'Open diagnostic [Q]uickfix list')
+  end,
+})
+end
 
 function M:setup()
 	for i, mapping in pairs(self.mappings) do
 		vim.keymap.set(mapping.mode, mapping.lhs, mapping.rhs, mapping.args)
 	end
+    define_lsp_keymaps()
 end
 
 return M
