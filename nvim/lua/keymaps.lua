@@ -191,7 +191,6 @@ M:lmap("n", "gK", vim.lsp.buf.signature_help, { desc = "Signature Help" })
 M:lmap("i", "<c-k>", vim.lsp.buf.signature_help, { desc = "Signature Help" })
 M:lmap({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, { desc = "Code Action" })
 M:lmap({ "n", "v" }, "<leader>cc", vim.lsp.codelens.run, { desc = "Run Codelens" })
-M:lmap("n", "<leader>cC", vim.lsp.codelens.refresh, { desc = "Refresh & Display Codelens" })
 M:lmap("n", "<leader>cr", vim.lsp.buf.rename, { desc = "Rename" })
 
 local function on_attach_lsp_keymaps(_, bufnr)
