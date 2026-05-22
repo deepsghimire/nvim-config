@@ -148,6 +148,8 @@ M:map("n", "<leader>qq", "<cmd>qa<cr>", { desc = "Quit All" })
 -- highlights under cursor
 M:map("n", "<leader>ui", vim.show_pos, { desc = "Inspect Pos" })
 
+M:map("n", "<leader>m", "<cmd>edit ~/scratch.md<cr>", { desc = "open Scratch" })
+
 
 -- floating terminal
 -- local lazyterm = function() LazyVim.terminal(nil, { cwd = LazyVim.root() }) end
