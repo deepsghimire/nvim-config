@@ -5,9 +5,9 @@ return {
 	config = function()
 		local ls = require("luasnip")
 		ls.setup()
-		require("luasnip.loaders.from_lua").load({ paths = "~/snippets" })
+		require("luasnip.loaders.from_lua").lazy_load({ paths = { "./lua/snippets" } })
 
-		vim.keymap.set({ "i" }, "<C-K>", function()
+		vim.keymap.set({ "i" }, "<C-Y>", function()
 			ls.expand()
 		end, { silent = true, desc = "expand snippet" })
 

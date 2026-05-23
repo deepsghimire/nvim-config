@@ -41,4 +41,6 @@ Keymaps are defined in `lua/keymaps.lua` using a custom wrapper:
 1. Edit the `M.options` table in `lua/options.lua`.
 
 ### Managing Snippets
-- Custom snippets are located in the `snippets/` directory (e.g., `snippets/all.lua`).
+- Custom snippets are located in `lua/snippets/` (e.g., `lua/snippets/python.lua`).
+- **Expansion**: Use `<C-Y>` (aligned with `blink.cmp` accept).
+- **Navigation**: Use `<C-L>` to jump forward and `<C-J>` to jump backward through placeholders.
