@@ -144,6 +144,16 @@ M:map("n", "<leader>qq", "<cmd>qa<cr>", { desc = "Quit All" })
 -- highlights under cursor
 M:map("n", "<leader>ui", vim.show_pos, { desc = "Inspect Pos" })
 
+-- toggles
+M:map("n", "<leader>uh", function()
+    vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
+end, { desc = "Toggle Inlay Hints" })
+
+M:map("n", "<leader>ud", function()
+    local current = vim.diagnostic.config().virtual_text
+    vim.diagnostic.config({ virtual_text = not current })
+end, { desc = "Toggle Diagnostic Virtual Text" })
+
 M:map("n", "<leader>m", "<cmd>edit ~/scratch.md<cr>", { desc = "open Scratch" })
 
 -- Terminal Mappings
@@ -171,15 +181,15 @@ M:map("n", "<leader><tab>]", "<cmd>tabnext<cr>", { desc = "Next Tab" })
 M:map("n", "<leader><tab>d", "<cmd>tabclose<cr>", { desc = "Close Tab" })
 M:map("n", "<leader><tab>[", "<cmd>tabprevious<cr>", { desc = "Previous Tab" })
 
-M:lmap("n", "gd", vim.lsp.buf.definition, { desc = "Goto Definition" })
-M:lmap("n", "gr", vim.lsp.buf.references, { desc = "References" })
-M:lmap("n", "gI", vim.lsp.buf.implementation, { desc = "Goto Implementation" })
-M:lmap("n", "gy", vim.lsp.buf.type_definition, { desc = "Goto T[y]pe Definition" })
+M:lmap("n", "gd", function() require("fzf-lua").lsp_definitions() end, { desc = "Goto Definition" })
+M:lmap("n", "gr", function() require("fzf-lua").lsp_references() end, { desc = "References" })
+M:lmap("n", "gI", function() require("fzf-lua").lsp_implementations() end, { desc = "Goto Implementation" })
+M:lmap("n", "gy", function() require("fzf-lua").lsp_typedefs() end, { desc = "Goto T[y]pe Definition" })
 M:lmap("n", "gD", vim.lsp.buf.declaration, { desc = "Goto Declaration" })
 M:lmap("n", "K", vim.lsp.buf.hover, { desc = "Hover" })
 M:lmap("n", "gK", vim.lsp.buf.signature_help, { desc = "Signature Help" })
 M:lmap("i", "<c-k>", vim.lsp.buf.signature_help, { desc = "Signature Help" })
-M:lmap({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, { desc = "Code Action" })
+M:lmap({ "n", "v" }, "<leader>ca", function() require("fzf-lua").lsp_code_actions() end, { desc = "Code Action" })
 M:lmap({ "n", "v" }, "<leader>cc", vim.lsp.codelens.run, { desc = "Run Codelens" })
 M:lmap("n", "<leader>cr", vim.lsp.buf.rename, { desc = "Rename" })
 
