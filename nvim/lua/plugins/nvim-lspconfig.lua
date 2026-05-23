@@ -22,7 +22,7 @@ return {
 
         -- Setup Mason-LSPConfig with handlers
         mason_lspconfig.setup({
-            ensure_installed = { "pyright", "lua_ls", "rust_analyzer", "bashls", "gopls", "jsonls", "yamlls" },
+            ensure_installed = { "basedpyright", "lua_ls", "rust_analyzer", "bashls", "gopls", "jsonls", "yamlls" },
             handlers = {
                 -- Default handler for all servers
                 function(server_name)
@@ -33,6 +33,20 @@ return {
                                 vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
                             end
                         end,
+                    })
+                end,
+                -- Specific handler for basedpyright
+                ["basedpyright"] = function()
+                    lspconfig.basedpyright.setup({
+                        capabilities = capabilities,
+                        settings = {
+                            basedpyright = {
+                                analysis = {
+                                    typeCheckingMode = "basic",
+                                    autoImportCompletions = true,
+                                },
+                            },
+                        },
                     })
                 end,
                 -- Specific handler for lua_ls
