@@ -38,6 +38,8 @@ return {
         require("mini.starter").setup({})
         require("mini.statusline").setup({})
         require("mini.tabline").setup({})
+        require("mini.files").setup({})
+        require("mini.splitjoin").setup({})
         local miniclue = require("mini.clue")
         miniclue.setup({
             triggers = {

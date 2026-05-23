@@ -87,6 +87,31 @@ M:map("v", ">", ">gv")
 -- new file
 M:map("n", "<leader>fn", "<cmd>enew<cr>", { desc = "New File" })
 
+-- fzf-lua
+M:map("n", "<leader>ff", function() require("fzf-lua").files() end, { desc = "Find Files" })
+M:map("n", "<leader>fg", function() require("fzf-lua").git_files() end, { desc = "Find Git Files" })
+M:map("n", "<leader>fb", function() require("fzf-lua").buffers() end, { desc = "Find Buffers" })
+M:map("n", "<leader>sg", function() require("fzf-lua").live_grep() end, { desc = "Live Grep" })
+M:map("n", "<leader>sM", function() require("fzf-lua").man_pages() end, { desc = "Man Pages" })
+M:map("n", "<leader>sm", function() require("fzf-lua").marks() end, { desc = "Marks" })
+M:map("n", '<leader>s"', function() require("fzf-lua").registers() end, { desc = "Registers" })
+M:map("n", "<leader>sk", function() require("fzf-lua").keymaps() end, { desc = "Keymaps" })
+M:map("n", "<leader>ss", function() require("fzf-lua").lsp_document_symbols() end, { desc = "Document Symbols" })
+
+-- mini.files
+M:map("n", "<leader>fm", function() require("mini.files").open() end, { desc = "Open Mini Files" })
+M:map("n", "<leader>fM", function() require("mini.files").open(vim.api.nvim_buf_get_name(0)) end, { desc = "Open Mini Files (Current File)" })
+
+-- mini.splitjoin
+M:map("n", "gS", function() require("mini.splitjoin").toggle() end, { desc = "Toggle Split/Join" })
+
+-- flash
+M:map({ "n", "x", "o" }, "s", function() require("flash").jump() end, { desc = "Flash" })
+M:map({ "n", "x", "o" }, "S", function() require("flash").treesitter() end, { desc = "Flash Treesitter" })
+M:map("o", "r", function() require("flash").remote() end, { desc = "Remote Flash" })
+M:map({ "o", "x" }, "R", function() require("flash").treesitter_search() end, { desc = "Treesitter Search" })
+M:map({ "c" }, "<c-s>", function() require("flash").toggle() end, { desc = "Toggle Flash Search" })
+
 M:map("n", "<leader>xl", "<cmd>lopen<cr>", { desc = "Location List" })
 M:map("n", "<leader>xq", "<cmd>copen<cr>", { desc = "Quickfix List" })
 
