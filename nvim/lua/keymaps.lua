@@ -154,6 +154,15 @@ M:map("n", "<leader>ud", function()
     vim.diagnostic.config({ virtual_text = not current })
 end, { desc = "Toggle Diagnostic Virtual Text" })
 
+-- git context (mini.diff / mini.git)
+M:map("n", "]h", function() require("mini.diff").goto_hunk("next") end, { desc = "Next Hunk" })
+M:map("n", "[h", function() require("mini.diff").goto_hunk("prev") end, { desc = "Prev Hunk" })
+M:map({ "n", "v" }, "<leader>ghs", function() require("mini.diff").operator("apply") end, { desc = "Stage Hunk" })
+M:map({ "n", "v" }, "<leader>ghr", function() require("mini.diff").operator("reset") end, { desc = "Reset Hunk" })
+M:map("n", "<leader>ghS", function() require("mini.diff").toggle_overlay() end, { desc = "Toggle Hunk Overlay" })
+M:map("n", "<leader>gb", function() require("mini.git").show_range_history() end, { desc = "Git Blame (Range)" })
+M:map("n", "<leader>gB", function() require("mini.git").show_at_cursor() end, { desc = "Git Blame (Cursor)" })
+
 M:map("n", "<leader>m", "<cmd>edit ~/scratch.md<cr>", { desc = "open Scratch" })
 
 -- Terminal Mappings
